@@ -5,7 +5,7 @@
 
 using namespace std;
 
-extern __global__ void kernel(string* arrayData, string* progress);
+extern __global__ void kernel(string* arrayData, long int* countData, string* progress);
 
 
 #endif

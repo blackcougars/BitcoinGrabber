@@ -8,7 +8,7 @@ int main(int argc, char *argv[])
 {
     // Проверка аргументов
     string progress = "";
-    string* dbPath = nullptr; // Пустой аргумент на будущее
+    string* dbPath = nullptr; 
     for (int i = 1; i < argc; i++)
     {   
         bool have = false;

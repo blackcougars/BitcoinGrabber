@@ -4,50 +4,10 @@
 
 #include <iostream>
 
-__global__ void generator(unsigned long long int* startNumber, unsigned long int* countAddresses, std::string* arrayAddresses, unsigned long long int* countCheckedPtr)
-{
-    //atomicAdd(countCheckedPtr, 1);
-    //blockIdx.x ;
-    //if (threadIdx.x == 1)
-     //   *countCheckedPtr += 1;
-    // Generation key and check
-    // unsigned int warp = 1'000'000;
-    // *startNumber = *startNumber + ((threadIdx.x * warp) - warp); // Start number private key (256 bits)
-    // unsigned long long int endNumber = *startNumber + warp;
-    // unsigned long countThreads = 1;      // Count activing threads
-
-
-    // while(*startNumber <= endNumber)
-    // {
-    //     // Private key to public key
-
-    
-    //     // Public key to payment addresses
-
-
-    //     // Check address have in db
-    //     int i = 0;
-    //     while(i < *countAddresses)
-    //     {
-    //         if (true)
-    //         {
-                
-    //         }
-    //         i += 1;
-    //     }
-    //     if (*startNumber == endNumber)
-    //         // Когда дошел до конца, увеличение
-    //         endNumber = endNumber + countThreads * warp;
-    //     *startNumber += 1;
-    // }
-    // endNumber = endNumber + countThreads * warp;
-
-}
-
-// 
+ 
 CUDA_MEMBER Generator::Generator()
 {
-    // Конструктор
+
 }
 
 CUDA_MEMBER int Generator::preparationData(string* progress, string* dbPath)
@@ -76,13 +36,18 @@ CUDA_MEMBER int Generator::preparationData(string* progress, string* dbPath)
     // Выделение памяти на GPU
     string* arrayDataPtr;
     string* progressPtr;
+    long int* countDataPtr;
     cudaMalloc((void**)&arrayDataPtr, sizeof(string) * countData);
     cudaMalloc((void**)&progressPtr, sizeof(string));
+    cudaMalloc((void**)&countDataPtr, sizeof(long int));
+
 
     // Загрузка данных в память GPU
     cudaMemcpy(arrayDataPtr, arrayData, sizeof(string) * countData, cudaMemcpyHostToDevice);
     cudaMemcpy(progressPtr, progress, sizeof(string), cudaMemcpyHostToDevice);
+    cudaMemcpy(countDataPtr, &countData, sizeof(long int), cudaMemcpyHostToDevice);
 
+    this->countDataPtr = countDataPtr;
     this->arrayDataPtr = arrayDataPtr;
     this->progressPtr = progressPtr;
 
@@ -116,7 +81,7 @@ CUDA_MEMBER string* Generator::stop()
 CUDA_MEMBER void Generator::startKernel()
 {
     // Запуск ядра     
-    dim3 gridSize = dim3(1, 1, 1);      //Размер используемого грида
+    dim3 gridSize = dim3(1, 1, 1);      // Размер используемого грида
     dim3 blockSize = dim3(1024, 1, 1);      
-    kernel <<<gridSize, blockSize>>> (this->arrayDataPtr, this->progressPtr);
+    kernel <<<gridSize, blockSize>>> (this->arrayDataPtr, this->countDataPtr, this->progressPtr);
 }

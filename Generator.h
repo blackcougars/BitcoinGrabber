@@ -26,6 +26,7 @@ class Generator
         //CUDA_MEMBER string dbPath;
         string* arrayDataPtr;
         string* progressPtr;
+        long int* countDataPtr;
 };
 
 

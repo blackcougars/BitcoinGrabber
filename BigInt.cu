@@ -1,19 +1,20 @@
 #include "BigInt.h"
 
+
 // конструткор по умолчанию
-BigInt::BigInt() {
+CUDA_MEMBER BigInt::BigInt() {
 	this->isNeg = false;
 	this->value = "0";
 }
 
 // конструктор из стандартного целого числа
-BigInt::BigInt(long x) {
+CUDA_MEMBER BigInt::BigInt(long x) {
 	this->isNeg = x < 0;
 	this->value = std::to_string(isNeg ? -x : x);
 }
 
 // конструктор из строки (пустая строка создаст число 0)
-BigInt::BigInt(const std::string &value) {
+CUDA_MEMBER BigInt::BigInt(const std::string &value) {
 	if (!value.length()) {
 		this->value = "0";
 		isNeg = false;
@@ -38,43 +39,43 @@ BigInt::BigInt(const std::string &value) {
 }
 
 // конструктор копирования
-BigInt::BigInt(const BigInt& bigInt) {
+CUDA_MEMBER BigInt::BigInt(const BigInt& bigInt) {
 	this->value = bigInt.getValue();
 	this->isNeg = bigInt.getIsNeg();
 }
 
 // получение строки со значением числа
-const std::string &BigInt::getValue() const {
+CUDA_MEMBER const std::string &BigInt::getValue() const {
 	return value;
 }
 
 // получение флага отрицательности числа
-const bool BigInt::getIsNeg() const {
+CUDA_MEMBER const bool BigInt::getIsNeg() const {
 	return isNeg;
 }
 
 // изменение флага отрицательности числа
-void BigInt::setIsNeg(bool isNeg) {
+CUDA_MEMBER void BigInt::setIsNeg(bool isNeg) {
 	this->isNeg = isNeg;
 }
 
 // получение знака числа
-int BigInt::sign() const {
+CUDA_MEMBER int BigInt::sign() const {
 	return (1 - 2 * isNeg) * (value != "0");
 }
 
 // проверка на чётность
-const bool BigInt::isEven() const {
+CUDA_MEMBER const bool BigInt::isEven() const {
 	return (value[value.length() - 1] - '0') % 2 == 0;
 }
 
 // получение модуля числа
-BigInt BigInt::abs() const {
+CUDA_MEMBER BigInt BigInt::abs() const {
 	return BigInt(value);
 }
 
 // получение числа в степени n
-BigInt BigInt::pow(long n) const {
+CUDA_MEMBER BigInt BigInt::pow(long n) const {
 	if (!n)
 		return 1;
 
@@ -87,7 +88,7 @@ BigInt BigInt::pow(long n) const {
 }
 
 // вычисление корня n-ой степени из числа
-BigInt BigInt::sqrt(long n) const {
+CUDA_MEMBER BigInt BigInt::sqrt(long n) const {
 	if (n < 2)
 		throw std::string("BigInt::sqrt() - n must be 2 or more");
 
@@ -112,17 +113,17 @@ BigInt BigInt::sqrt(long n) const {
 }
 
 // проверка на равенство двух чисел (равны, если одного знака и одного значения)
-const bool BigInt::operator==(const BigInt &bigInt) const {
+CUDA_MEMBER const bool BigInt::operator==(const BigInt &bigInt) const {
 	return (value == bigInt.getValue()) && (isNeg == bigInt.getIsNeg());
 }
 
 // проверка на неравенство - отрицание равенства
-const bool BigInt::operator!=(const BigInt &bigInt) const {
+CUDA_MEMBER const bool BigInt::operator!=(const BigInt &bigInt) const {
 	return !(*this == bigInt);
 }
 
 // проверка, что число меньше bigInt
-const bool BigInt::operator<(const BigInt &bigInt) const {
+CUDA_MEMBER const bool BigInt::operator<(const BigInt &bigInt) const {
 	std::string value2 = bigInt.getValue(); // получаем значение второго числа
 	size_t len1 = value.length(); // запоминаем длину первого числа
 	size_t len2 = value2.length(); // запоминаем длину второго числа
@@ -147,22 +148,22 @@ const bool BigInt::operator<(const BigInt &bigInt) const {
 }
 
 // проверка, что число больше bigInt
-const bool BigInt::operator>(const BigInt &bigInt) const {
+CUDA_MEMBER const bool BigInt::operator>(const BigInt &bigInt) const {
 	return !(*this < bigInt || *this == bigInt);
 }
 
 // проверка, что число меньше или равно bigInt
-const bool BigInt::operator<=(const BigInt &bigInt) const {
+CUDA_MEMBER const bool BigInt::operator<=(const BigInt &bigInt) const {
 	return *this < bigInt || *this == bigInt;
 }
 
 // проверка, что число больше или равно bigInt
-const bool BigInt::operator>=(const BigInt &bigInt) const {
+CUDA_MEMBER const bool BigInt::operator>=(const BigInt &bigInt) const {
 	return *this > bigInt || *this == bigInt;
 }
 
 // операция присваивания
-BigInt &BigInt::operator=(const BigInt &bigInt) {
+CUDA_MEMBER BigInt &BigInt::operator=(const BigInt &bigInt) {
 	value = bigInt.getValue();
 	isNeg = bigInt.getIsNeg();
 
@@ -170,17 +171,17 @@ BigInt &BigInt::operator=(const BigInt &bigInt) {
 }
 
 // унарный минус, если было отрицательным, возвращаем положительное, иначе отрицательное
-BigInt BigInt::operator-() const && {
+CUDA_MEMBER BigInt BigInt::operator-() const && {
 	return BigInt(isNeg ? value : std::string("-") + value);
 }
 
 // унарный плюс (просто копируем значение числа)
-BigInt BigInt::operator+() const && {
+CUDA_MEMBER BigInt BigInt::operator+() const && {
 	return BigInt(*this);
 }
 
 // умножение методом Карацубы
-BigInt BigInt::karatsuba_mul(const BigInt &a, const BigInt &b) {
+CUDA_MEMBER BigInt BigInt::karatsuba_mul(const BigInt &a, const BigInt &b) {
     std::string v1 = a.getValue();
     std::string v2 = b.getValue();
 
@@ -208,7 +209,7 @@ BigInt BigInt::karatsuba_mul(const BigInt &a, const BigInt &b) {
 
 
 // бинарный плюс (сложение двух чисел)
-BigInt BigInt::operator+(const BigInt &bigInt) const {
+CUDA_MEMBER BigInt BigInt::operator+(const BigInt &bigInt) const {
 	bool isAddOp = !(bigInt.getIsNeg() ^ isNeg); // если знаки одинаковые, то выполняем сложение
 
 	if (isAddOp) {
@@ -238,7 +239,7 @@ BigInt BigInt::operator+(const BigInt &bigInt) const {
 }
 
 // бинарный минус (вычитание двух чисел)
-BigInt BigInt::operator-(const BigInt &bigInt) const {
+CUDA_MEMBER BigInt BigInt::operator-(const BigInt &bigInt) const {
 	if (*this == bigInt) 
 		return 0; // если числа равны, то какой смысл вычитать?
 
@@ -285,7 +286,7 @@ BigInt BigInt::operator-(const BigInt &bigInt) const {
 }
 
 // бинарная звёздочка (умножение двух чисел)
-BigInt BigInt::operator*(const BigInt &bigInt) const {
+CUDA_MEMBER BigInt BigInt::operator*(const BigInt &bigInt) const {
 	if (value == "0" || bigInt.getValue() == "0")
 		return 0; // если один из множителей равен нулю, то результат равен нулю
 
@@ -334,7 +335,7 @@ BigInt BigInt::operator*(const BigInt &bigInt) const {
 }
 
 // бинарный слеш (деление двух чисел)
-BigInt BigInt::operator/(const BigInt &bigInt) const {
+CUDA_MEMBER BigInt BigInt::operator/(const BigInt &bigInt) const {
 	std::string value1 = value;
 	std::string value2 = bigInt.getValue(); // запоминаем значение второго числа
 
@@ -408,7 +409,7 @@ BigInt BigInt::operator/(const BigInt &bigInt) const {
 }
 
 // бинарный процент (операция взятия остатка от деления) (полностью аналогична делению)
-BigInt BigInt::operator%(const BigInt &bigInt) const {
+CUDA_MEMBER BigInt BigInt::operator%(const BigInt &bigInt) const {
 	std::string value2 = bigInt.getValue();
 
 	if (value2[0] == '0')
@@ -461,11 +462,11 @@ BigInt BigInt::operator%(const BigInt &bigInt) const {
 	return isNeg ? -BigInt(mod2) : mod2;
 }
 
-BigInt BigInt::operator<<(size_t n) const {
+CUDA_MEMBER BigInt BigInt::operator<<(size_t n) const {
 	return BigInt(std::string(isNeg ? "-" : "") + value + std::string(n, '0'));
 }
 
-BigInt BigInt::operator>>(size_t n) const {
+CUDA_MEMBER BigInt BigInt::operator>>(size_t n) const {
 	if (n >= value.length())
 		return 0;
 
@@ -473,52 +474,52 @@ BigInt BigInt::operator>>(size_t n) const {
 }
 
 // краткая запись сложения
-BigInt &BigInt::operator+=(const BigInt &bigInt) {
+CUDA_MEMBER BigInt &BigInt::operator+=(const BigInt &bigInt) {
 	return *this = *this + bigInt;
 }
 
 // краткая запись вычитания
-BigInt &BigInt::operator-=(const BigInt &bigInt) {
+CUDA_MEMBER BigInt &BigInt::operator-=(const BigInt &bigInt) {
 	return *this = *this - bigInt;
 }
 
 // краткая запись умножения
-BigInt &BigInt::operator*=(const BigInt &bigInt) {
+CUDA_MEMBER BigInt &BigInt::operator*=(const BigInt &bigInt) {
 	return *this = *this * bigInt;
 }
 
 // краткая запись деления
-BigInt &BigInt::operator/=(const BigInt &bigInt) {
+CUDA_MEMBER BigInt &BigInt::operator/=(const BigInt &bigInt) {
 	return *this = *this / bigInt;
 }
 
 // краткая запись взятия остатка
-BigInt &BigInt::operator%=(const BigInt &bigInt) {
+CUDA_MEMBER BigInt &BigInt::operator%=(const BigInt &bigInt) {
 	return *this = *this % bigInt;
 }
 
 // краткая запись свдига влево
-BigInt &BigInt::operator<<=(size_t n) {
+CUDA_MEMBER BigInt &BigInt::operator<<=(size_t n) {
 	return *this = *this << n;
 }
 
 // краткая запись свдига вправо
-BigInt &BigInt::operator>>=(size_t n) {
+CUDA_MEMBER BigInt &BigInt::operator>>=(size_t n) {
 	return *this = *this >> n;
 }
 
 // префиксная запись инкремента
-BigInt &BigInt::operator++() {
+CUDA_MEMBER BigInt &BigInt::operator++() {
 	return *this = *this + 1;
 }
 
 // префиксная запись декремента
-BigInt &BigInt::operator--() {
+CUDA_MEMBER BigInt &BigInt::operator--() {
 	return *this = *this - 1;
 }
 
 // постфиксная запись инкремента
-BigInt BigInt::operator++(int) {
+CUDA_MEMBER BigInt BigInt::operator++(int) {
 	BigInt res = *this;
 	*this = *this + BigInt(1);	
 
@@ -526,7 +527,7 @@ BigInt BigInt::operator++(int) {
 }
 
 // постфиксная запись декремента
-BigInt BigInt::operator--(int) {
+CUDA_MEMBER BigInt BigInt::operator--(int) {
 	BigInt res = *this;
 	*this = *this - BigInt(1);
 
@@ -534,7 +535,7 @@ BigInt BigInt::operator--(int) {
 }
 
 // вывод числа в выходной поток
-std::ostream &operator<<(std::ostream &stream, const BigInt &bigInt) {
+CUDA_MEMBER std::ostream &operator<<(std::ostream &stream, const BigInt &bigInt) {
 	if (bigInt.getIsNeg())
 		stream << "-";
 
@@ -542,7 +543,7 @@ std::ostream &operator<<(std::ostream &stream, const BigInt &bigInt) {
 }
 
 // ввод числа из входного потока
-std::istream &operator>>(std::istream &stream, BigInt &bigInt) {
+CUDA_MEMBER std::istream &operator>>(std::istream &stream, BigInt &bigInt) {
 	std::string value;
 	stream >> value;
 	bigInt = BigInt(value);
