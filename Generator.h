@@ -21,11 +21,11 @@ class Generator
 
     private:
         CUDA_MEMBER void startKernel();  // Метод запуска ядра на GPU
-        CUDA_MEMBER void preparationData();
+        CUDA_MEMBER void preparationData(string* progress, string* dbPath);
         //CUDA_MEMBER string progress;
         //CUDA_MEMBER string dbPath;
-        CUDA_MEMBER string* arrayDataPtr;
-        CUDA_MEMBER string* progressPtr;
+        string* arrayDataPtr;
+        string* progressPtr;
 };
 
 

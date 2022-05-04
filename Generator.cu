@@ -5,9 +5,9 @@
 __global__ void generator(unsigned long long int* startNumber, unsigned long int* countAddresses, std::string* arrayAddresses, unsigned long long int* countCheckedPtr)
 {
     //atomicAdd(countCheckedPtr, 1);
-    blockIdx.x ;
-    if (threadIdx.x == 1)
-        *countCheckedPtr += 1;
+    //blockIdx.x ;
+    //if (threadIdx.x == 1)
+     //   *countCheckedPtr += 1;
     // Generation key and check
     // unsigned int warp = 1'000'000;
     // *startNumber = *startNumber + ((threadIdx.x * warp) - warp); // Start number private key (256 bits)
@@ -50,9 +50,7 @@ CUDA_MEMBER Generator::Generator()
 
 CUDA_MEMBER void Generator::preparationData(string* progress, string* dbPath)
 {
-    /*
-     * Подготовка данных к запуску
-    */
+    // Подготовка данных к запуску
     
     // Подготовка массива ключей/адресов
     ifstream* file = new ifstream(*dbPath);
@@ -84,24 +82,27 @@ CUDA_MEMBER void Generator::preparationData(string* progress, string* dbPath)
 CUDA_MEMBER void Generator::start(string* progress, string* dbPath)
 {
     // Подготовка к запуску ядра
-    this->dbPath = *dbPath;
-    this->progress = *progress;
     this->preparationData(progress, dbPath);
     this->startKernel();
 }
 
 CUDA_MEMBER string* Generator::stop()
 {
-    // Остановка ядра, сохранение прогресса
-    string progress;
+    // Остановка ядра, сохранение прогресса, высвобождение ресурсов
+    string* progress = new string("none");// Не реализовано
+
     
-    return &progress;
+    // Высвобождение ресурсов GPU  
+    cudaFree(this->arrayDataPtr);
+    cudaFree(this->progressPtr);
+
+    return progress;
 }
 
 CUDA_MEMBER void Generator::startKernel()
 {
-    // Запуск ядра 
-    this->arrayDataPtr; // Массив с данными для проверки
-    this->progressPtr;
-
+    // Запуск ядра     
+    dim3 gridSize = dim3(1, 1, 1);    //Размер используемого грида
+    dim3 blockSize = dim3(1024, 1, 1); 
+    kernel<<<gridSize, blockSize>>>(this->arrayDataPtr, this->progressPtr);
 }

@@ -1,7 +1,11 @@
 #ifndef H_KERNEL
 #define H_KERNEL
 
-extern __global__ void kernel();
+#include <string>
+
+using namespace std;
+
+extern __global__ void kernel(string* arrayData, string* progress);
 
 
 #endif
