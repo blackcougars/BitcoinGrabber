@@ -16,12 +16,12 @@ class Generator
 {
     public:
         CUDA_MEMBER Generator();
-        CUDA_MEMBER void start(string* progress, string* dbPath);
+        CUDA_MEMBER int start(string* progress, string* dbPath);
         CUDA_MEMBER string* stop();
 
     private:
         CUDA_MEMBER void startKernel();  // Метод запуска ядра на GPU
-        CUDA_MEMBER void preparationData(string* progress, string* dbPath);
+        CUDA_MEMBER int preparationData(string* progress, string* dbPath);
         //CUDA_MEMBER string progress;
         //CUDA_MEMBER string dbPath;
         string* arrayDataPtr;

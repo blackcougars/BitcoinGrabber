@@ -2,6 +2,8 @@
 #include "Kernel.h"
 
 
+#include <iostream>
+
 __global__ void generator(unsigned long long int* startNumber, unsigned long int* countAddresses, std::string* arrayAddresses, unsigned long long int* countCheckedPtr)
 {
     //atomicAdd(countCheckedPtr, 1);
@@ -48,14 +50,20 @@ CUDA_MEMBER Generator::Generator()
     // Конструктор
 }
 
-CUDA_MEMBER void Generator::preparationData(string* progress, string* dbPath)
+CUDA_MEMBER int Generator::preparationData(string* progress, string* dbPath)
 {
     // Подготовка данных к запуску
     
     // Подготовка массива ключей/адресов
+    if (!dbPath)
+        dbPath = new string ("db.txt");
+
     ifstream* file = new ifstream(*dbPath);
+    if(!file->is_open())
+        // Ошибка открытия файла 
+        return -1;
     string data;
-    int countData;
+    int countData = 0;
     while(*file >> data)
         countData++;
     file->clear();
@@ -77,13 +85,19 @@ CUDA_MEMBER void Generator::preparationData(string* progress, string* dbPath)
 
     this->arrayDataPtr = arrayDataPtr;
     this->progressPtr = progressPtr;
+
+    return 0;
 }
 
-CUDA_MEMBER void Generator::start(string* progress, string* dbPath)
+CUDA_MEMBER int Generator::start(string* progress, string* dbPath)
 {
     // Подготовка к запуску ядра
-    this->preparationData(progress, dbPath);
+    int statusCode = this->preparationData(progress, dbPath);
+    if (statusCode != 0)
+        return statusCode;
     this->startKernel();
+
+    return 0;
 }
 
 CUDA_MEMBER string* Generator::stop()
@@ -102,7 +116,7 @@ CUDA_MEMBER string* Generator::stop()
 CUDA_MEMBER void Generator::startKernel()
 {
     // Запуск ядра     
-    dim3 gridSize = dim3(1, 1, 1);    //Размер используемого грида
-    dim3 blockSize = dim3(1024, 1, 1); 
-    kernel<<<gridSize, blockSize>>>(this->arrayDataPtr, this->progressPtr);
+    dim3 gridSize = dim3(1, 1, 1);      //Размер используемого грида
+    dim3 blockSize = dim3(1024, 1, 1);      
+    kernel <<<gridSize, blockSize>>> (this->arrayDataPtr, this->progressPtr);
 }
