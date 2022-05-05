@@ -542,6 +542,13 @@ CUDA_MEMBER std::ostream &operator<<(std::ostream &stream, const BigInt &bigInt)
 	return stream << bigInt.getValue();
 }
 
+CUDA_MEMBER bool BigInt::operator &(int a)
+{
+	std::bitset<256> valueBit(this->value);	
+	return valueBit[255];
+}
+
+
 // ввод числа из входного потока
 CUDA_MEMBER std::istream &operator>>(std::istream &stream, BigInt &bigInt) {
 	std::string value;

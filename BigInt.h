@@ -1,10 +1,11 @@
 #ifndef BIG_INT_H
 #define BIG_INT_H
 
-#define CUDA_MEMBER __device__        // Расположение функций класса (device или host)
+#define CUDA_MEMBER __global__        // Расположение функций класса (device или host)
 
 #include <iostream>
 #include <string>
+#include <bitset>
 
 class BigInt {
 	std::string value; // значение числа
@@ -72,6 +73,8 @@ public:
 	CUDA_MEMBER BigInt operator++(int); // v++
 	CUDA_MEMBER BigInt operator--(int); // v--
 
+	// Битовые операторы
+	CUDA_MEMBER bool operator &(int a);
 
 	CUDA_MEMBER friend std::ostream &operator<<(std::ostream &stream, const BigInt &bigInt); // вывод числа в выходной поток
 	CUDA_MEMBER friend std::istream &operator>>(std::istream &stream, BigInt &bigInt); // ввод числа из входного потока

@@ -126,4 +126,7 @@ __global__ void kernel(string* arrayData, long int* countData, string* progress)
         if (currentPriv >= endKeys)
             running = false;
     }
+    if (threadIdx.x == 0)
+        // Первый поток возвращает прогресс 
+        ;
 }

@@ -9,7 +9,7 @@ g_order = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEBAAEDCE6AF48A03BBFD25E8CD0364141
 p = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFFFFFC2F
 #print("p:" , p)
 # secret key 
-priv = 0xb78beac0be5748a3b18f10babf69cfa8e18461fab68dfefbdc90780d2909a2da
+priv = 83020463237742095447187601505567755285685578327720972455401612915394172527322
 
 def inverse_mod(a):
     if a < 0 or a >= p: 
@@ -51,4 +51,5 @@ while e:
     l = (top * inverse_mod(bottom)) % p
     x3 = (l * l - q_x - other_x) % p
     e, q_x, q_y = e >> 1, x3, (l * (q_x - x3) - q_y) % p
+print (priv)
 print ('  privkey:    %x\n   pubkey: %s' % (priv, "04 %x %x" % (result_x, result_y)) )
