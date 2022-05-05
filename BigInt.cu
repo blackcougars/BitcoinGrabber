@@ -1,5 +1,6 @@
 #include "BigInt.h"
 
+#include <iostream>
 
 // конструткор по умолчанию
 CUDA_MEMBER BigInt::BigInt() {
@@ -544,8 +545,14 @@ CUDA_MEMBER std::ostream &operator<<(std::ostream &stream, const BigInt &bigInt)
 
 CUDA_MEMBER bool BigInt::operator &(int a)
 {
-	std::bitset<256> valueBit(this->value);	
-	return valueBit[255];
+	//std::string thisStr = this->value;
+	//std::cout << thisStr << std::endl;
+	//std::string strBit = this->value;
+	//std::bitset<256> valueBit(&strBit);	
+	//return valueBit[255];
+	//this->value.length();
+	//bool res = this->value.substr((*this).value.length() - 1, 1);
+	return true;
 }
 
 

@@ -1,7 +1,7 @@
 #ifndef BIG_INT_H
 #define BIG_INT_H
 
-#define CUDA_MEMBER __global__        // Расположение функций класса (device или host)
+#define CUDA_MEMBER __host__        // Расположение функций класса (device или host)
 
 #include <iostream>
 #include <string>
