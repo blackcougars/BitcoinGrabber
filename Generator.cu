@@ -7,7 +7,7 @@
  
 CUDA_MEMBER Generator::Generator()
 {
-
+    
 }
 
 CUDA_MEMBER int Generator::preparationData(string* progress, string* dbPath)
