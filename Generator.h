@@ -29,5 +29,4 @@ class Generator
         long int* countDataPtr;
 };
 
-
 #endif

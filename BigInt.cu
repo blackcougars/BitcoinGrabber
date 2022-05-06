@@ -468,10 +468,39 @@ CUDA_MEMBER BigInt BigInt::operator<<(size_t n) const {
 }
 
 CUDA_MEMBER BigInt BigInt::operator>>(size_t n) const {
-	if (n >= value.length())
-		return 0;
-
-	return BigInt(std::string(isNeg ? "-" : "") + value.substr(0, value.length() - n));
+	//if (n >= value.length())
+	//	return 0;
+	BigInt q = *this;
+	std::string qs;
+	while(q > 0)
+	{
+		if (q % 2 == 0)
+			qs += "0";
+		else
+			qs += "1";
+		q /= 2;
+		// 111101001011111111100000110
+	}
+	// Invert string
+	//std::string qsi;
+	qs = qs.substr(1, qs.length() -1 );
+	BigInt result(0);
+	long int i = 0;
+	while (i < qs.length())
+	{
+		//std::cout << BigInt(2).pow(i) * BigInt(qs[i]) << std::endl;
+		//std::cout <<  BigInt(qs[i]) << std::endl;
+		if (qs[i] == '1')
+			result += BigInt(2).pow(i) * BigInt(1);
+		i += 1;
+	}
+	//std::cout << result << std::endl;
+	// for (int i = 0; i < qs.length(); i++)
+	// 	qsi += qs[qs.length() - i - 1];
+	// //std::cout << qsi  << std::endl;
+	// return BigInt(qsi);
+	return result;
+	//return BigInt(std::string(isNeg ? "-" : "") + value.substr(0, value.length() - n));
 }
 
 // краткая запись сложения
@@ -545,14 +574,20 @@ CUDA_MEMBER std::ostream &operator<<(std::ostream &stream, const BigInt &bigInt)
 
 CUDA_MEMBER bool BigInt::operator &(int a)
 {
-	//std::string thisStr = this->value;
-	//std::cout << thisStr << std::endl;
-	//std::string strBit = this->value;
-	//std::bitset<256> valueBit(&strBit);	
-	//return valueBit[255];
-	//this->value.length();
-	//bool res = this->value.substr((*this).value.length() - 1, 1);
-	return true;
+	BigInt q = *this;
+	std::string qs;
+	while(q > 0)
+	{
+		if (q % 2 == 0)
+			qs += "0";
+		else
+			qs += "1";
+		q /= 2;
+	}
+	if (qs[0] == '1')
+		return true;
+	else
+		return false;
 }
 
 
@@ -564,3 +599,50 @@ CUDA_MEMBER std::istream &operator>>(std::istream &stream, BigInt &bigInt) {
 
 	return stream;
 }
+
+
+// CUDA_MEMBER BigInt &operator>>(BigInt &a, int b) {
+// 	std::string binary = "";	
+// 	int i = 0;
+// 	while( i < a.value.length() )
+// 	{
+// 		switch ( a.value[i] )
+// 		{
+// 			case '0':
+// 				binary += "0000";
+// 				break;
+// 			case '1':
+// 				binary += "0001";
+// 				break;
+// 			case '2':
+// 				binary += "0010";
+// 				break;
+// 			case '3':
+// 				binary += "0011";
+// 				break;
+	// 		case '4':
+	// 			binary += "0100";
+	// 			break;
+	// 		case '5':
+	// 			binary += "0101";
+	// 			break;
+	// 		case '6':
+	// 			binary += "0110";
+	// 			break;
+	// 		case '7':
+	// 			binary += "0111";
+	// 			break;
+	// 		case '8':
+	// 			binary += "1000";
+	// 			break;
+	// 		case '9':
+	// 			binary += "1001";
+	// 			break;
+	// 	}
+	// 	i += 1;
+	// }	
+	// std::bitset <128> bits(binary);
+	// std::cout << bits.to_string() << std::endl;
+	// return bits[127];
+
+//}

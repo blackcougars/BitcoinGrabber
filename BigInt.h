@@ -56,6 +56,8 @@ public:
 	CUDA_MEMBER BigInt operator<<(size_t n) const;
 	CUDA_MEMBER BigInt operator>>(size_t n) const;
 
+	//CUDA_MEMBER BigInt operator>>(int b) const;
+
 	// краткая форма операций
 	CUDA_MEMBER BigInt &operator+=(const BigInt &bigInt);
 	CUDA_MEMBER BigInt &operator-=(const BigInt &bigInt);
